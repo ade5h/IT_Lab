@@ -1,41 +1,30 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from django.shortcuts import render, redirect
+from .forms import InputForm
 
-from django.shortcuts import render
-from webapp.forms import InputForm
-
-# Create your views here.
 def index(request):
-	if request.method =='POST': 
-		details = InputForm(request.POST)
+	form = InputForm()
+	return render(request, 'firstPage.html', {'form': form})
 
-		if details.is_valid():
-			company = details.cleaned_data.get('company')
-			device = details.cleaned_data.get('device')[0]
-			quantity = details.cleaned_data.get('quantity')
+def first_page(request):
+	if request.method == 'POST':
+		form = InputForm(request.POST)
+		
+		if form.is_valid():
+			name = form.cleaned_data['name']
+			roll = form.cleaned_data['roll']
+			subject = form.cleaned_data['subject']
 
-			print(company)
-			print(device)
-			print(quantity)
+			request.session['name'] = name
+			request.session['roll'] = roll
+			request.session['subject'] = subject
+		
+	return redirect('/second_page')
 
-			priceDetails = {
-				'Nokia': {'Laptop': 20, 'Mobile': 5},
-				'HP': {'Laptop': 25, 'Mobile': 6},
-				'Motorola': {'Laptop': 30, 'Mobile': 4},
-				'Apple': {'Laptop': 60, 'Mobile': 20},
-				'Samsung': {'Laptop': 50, 'Mobile': 10},
-			}
+def second_page(request):
+	name = request.session['name']
+	roll = request.session['roll']
+	subject = request.session['subject']
 
-			price = priceDetails[company][device]*int(quantity)
+	context = {'name': name, 'roll': roll, 'subject': subject}
 
-			return render(request, "purchaseDetails.html", {
-				'company': company,
-				'device': device,
-				'quantity': quantity,
-				'price': price
-			})
-
-	else:
-		context = {}
-		context['form'] = InputForm()
-		return render(request, "buy.html", context)
+	return render(request, 'secondPage.html', context)

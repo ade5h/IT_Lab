@@ -1,23 +1,15 @@
 from django import forms
+from django.forms import widgets
+from django.forms.fields import CharField, IntegerField
 
-CHOICES=[('HP','HP'),
-         ('Nokia','Nokia'),
-         ('Samsung','Samsung'),
-         ('Motorola','Motorola'),
-				 ('Apple', 'Apple')
-				]
-
-FAVORITE_COLORS_CHOICES = [
-    ('Mobile', 'Mobile'),
-    ('Laptop', 'Laptop')
+subjects = [
+	('Math', 'Math'),
+	('Physics', 'Physics'),
+	('English', 'English'),
+	('Chemistry', 'Chemistry'),
 ]
-
 class InputForm(forms.Form):
-	company = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-
-	device = forms.MultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple,
-        choices=FAVORITE_COLORS_CHOICES,
-    )
-
-	quantity = forms.CharField(max_length = 200);
+	name = CharField()
+	roll = IntegerField()
+	subject = CharField(label='Select subject.',
+	widget=forms.Select(choices=subjects))
