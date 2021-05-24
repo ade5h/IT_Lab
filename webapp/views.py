@@ -10,17 +10,32 @@ def index(request):
 		details = InputForm(request.POST)
 
 		if details.is_valid():
-			username = details.cleaned_data.get('username')
-			email = details.cleaned_data.get('email')
-			contact_number = details.cleaned_data.get('contact_number')
+			company = details.cleaned_data.get('company')
+			device = details.cleaned_data.get('device')[0]
+			quantity = details.cleaned_data.get('quantity')
 
-			return render(request, "success.html", {
-				'username': username,
-				'email': email,
-				'contact_number': contact_number
+			print(company)
+			print(device)
+			print(quantity)
+
+			priceDetails = {
+				'Nokia': {'Laptop': 20, 'Mobile': 5},
+				'HP': {'Laptop': 25, 'Mobile': 6},
+				'Motorola': {'Laptop': 30, 'Mobile': 4},
+				'Apple': {'Laptop': 60, 'Mobile': 20},
+				'Samsung': {'Laptop': 50, 'Mobile': 10},
+			}
+
+			price = priceDetails[company][device]*int(quantity)
+
+			return render(request, "purchaseDetails.html", {
+				'company': company,
+				'device': device,
+				'quantity': quantity,
+				'price': price
 			})
 
 	else:
 		context = {}
 		context['form'] = InputForm()
-		return render(request, "register.html", context)
+		return render(request, "buy.html", context)
