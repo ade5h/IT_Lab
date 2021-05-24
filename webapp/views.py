@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from .forms import InputForm
+from webapp.forms import InputForm
 
 # Create your views here.
 def index(request):
@@ -10,14 +10,17 @@ def index(request):
 		details = InputForm(request.POST)
 
 		if details.is_valid():
-			manufacturer = details.cleaned_data.get('manufacturer')
-			model_name = details.cleaned_data.get('model_name')
-			return render(request, "render.html", {
-				'manufacturer': manufacturer,
-				'model_name': model_name
+			username = details.cleaned_data.get('username')
+			email = details.cleaned_data.get('email')
+			contact_number = details.cleaned_data.get('contact_number')
+
+			return render(request, "success.html", {
+				'username': username,
+				'email': email,
+				'contact_number': contact_number
 			})
 
 	else:
 		context = {}
 		context['form'] = InputForm()
-		return render(request, "basic.html", context)
+		return render(request, "register.html", context)
